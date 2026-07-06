@@ -1,0 +1,227 @@
+/* OptiCrop CSS Styling System */
+
+:root {
+    --bg-primary: #0b110e;
+    --bg-secondary: #131b17;
+    --glass-bg: rgba(19, 27, 23, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --accent-success: #198754;
+    --accent-success-light: #20c997;
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --card-hover: rgba(255, 255, 255, 0.03);
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+}
+
+/* Override Bootstrap card and utility text colors for dark mode visibility */
+.card {
+    color: var(--text-primary) !important;
+}
+
+.card-title {
+    color: var(--text-primary) !important;
+}
+
+.card-text, .text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* Background Gradients */
+body::before {
+    content: "";
+    position: fixed;
+    top: -10%;
+    right: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, rgba(25, 135, 84, 0.12) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    bottom: -10%;
+    left: -10%;
+    width: 45vw;
+    height: 45vw;
+    background: radial-gradient(circle, rgba(32, 201, 151, 0.08) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Navbar */
+.navbar {
+    background: rgba(11, 17, 14, 0.8) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 15px 0;
+}
+
+.navbar-brand span {
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    padding: 8px 16px !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--text-primary) !important;
+    background-color: rgba(25, 135, 84, 0.15);
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
+/* Glassmorphism Panel */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Hero Section */
+.text-success-gradient {
+    background: linear-gradient(135deg, var(--accent-success-light), var(--accent-success));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-icon-container {
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(25, 135, 84, 0.15) 0%, transparent 70%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.hero-animated-icon {
+    font-size: 7.5rem;
+    filter: drop-shadow(0 0 15px rgba(25, 135, 84, 0.6));
+    animation: sway 6s ease-in-out infinite alternate;
+}
+
+@keyframes sway {
+    0% { transform: rotate(-5deg) scale(1); }
+    100% { transform: rotate(8deg) scale(1.05); }
+}
+
+/* Scenario Cards */
+.scenario-card {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 20px !important;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.scenario-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(25, 135, 84, 0.3) !important;
+    background: var(--card-hover) !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.card-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hover-arrow i {
+    transition: transform 0.3s ease;
+}
+
+.scenario-card:hover .hover-arrow i {
+    transform: translateX(4px);
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    padding: 12px 16px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: var(--text-primary) !important;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-success-light) !important;
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.25) !important;
+}
+
+.form-control::placeholder {
+    color: #555 !important;
+}
+
+/* Custom Scrollbar for Checkboxes */
+.crop-checkbox-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.crop-checkbox-list::-webkit-scrollbar-track {
+    background: #0f1412;
+}
+
+.crop-checkbox-list::-webkit-scrollbar-thumb {
+    background: #23312a;
+    border-radius: 3px;
+}
+
+.crop-checkbox-list::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-success);
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid var(--glass-border);
+    margin-top: 80px;
+}
+
+/* Result highlight animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-box {
+    animation: fadeInUp 0.5s ease-out forwards;
+}

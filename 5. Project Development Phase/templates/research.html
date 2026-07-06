@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}OptiCrop - Research & Policy Dashboard{% endblock %}
+
+{% block head %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5 px-md-5">
+    <div class="row">
+        <!-- Control Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="glass-panel p-4 h-100">
+                <h4 class="fw-bold mb-3"><i class="fa-solid fa-filter text-success me-1"></i> Dashboard Filters</h4>
+                <p class="text-secondary small mb-4">Select crops below to compare their environmental and nutrient requirements in the charts.</p>
+                
+                <div class="mb-3">
+                    <button id="select-all-btn" class="btn btn-outline-success btn-sm w-100 mb-2">Select All Crops</button>
+                    <button id="clear-all-btn" class="btn btn-outline-secondary btn-sm w-100">Clear Selection</button>
+                </div>
+
+                <div class="crop-checkbox-list border border-secondary p-3 rounded bg-dark" style="max-height: 400px; overflow-y: auto;">
+                    {% for crop in crops %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input crop-selector" type="checkbox" value="{{ crop }}" id="check-{{ crop }}" 
+                            {% if crop in ['rice', 'maize', 'coffee', 'cotton', 'apple'] %}checked{% endif %}>
+                            <label class="form-check-label text-capitalize text-white" for="check-{{ crop }}">
+                                {{ crop }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Dashboard -->
+        <div class="col-lg-9">
+            <div class="glass-panel p-4 p-md-5">
+                <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                    <div>
+                        <h2 class="fw-bold mb-0">Agricultural Research Engine</h2>
+                        <p class="text-secondary mb-0">Analysis of crop-environment relationships for sustainable farming.</p>
+                    </div>
+                    <div class="badge bg-success-subtle text-success py-2 px-3 fs-6 rounded-pill">
+                        <i class="fa-solid fa-database me-1"></i> 2,200 Observations
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Chart 1 -->
+                    <div class="col-12">
+                        <div class="card bg-dark border-secondary p-3 rounded-3 shadow-sm">
+                            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-vial text-success me-1"></i> Macronutrient Profiles (N, P, K Averages)</h5>
+                            <div style="position: relative; height:320px; width:100%;">
+                                <canvas id="nutrientChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2 -->
+                    <div class="col-md-6">
+                        <div class="card bg-dark border-secondary p-3 rounded-3 shadow-sm h-100">
+                            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-cloud-sun text-warning me-1"></i> Climate Alignment (Temp & Rain)</h5>
+                            <div style="position: relative; height:280px; width:100%;">
+                                <canvas id="climateChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 3 -->
+                    <div class="col-md-6">
+                        <div class="card bg-dark border-secondary p-3 rounded-3 shadow-sm h-100">
+                            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-droplet text-info me-1"></i> pH & Humidity Profile</h5>
+                            <div style="position: relative; height:280px; width:100%;">
+                                <canvas id="phHumidityChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let statsData = {};
+    let nutrientChart, climateChart, phHumidityChart;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Fetch stats from backend API
+        fetch("/api/stats")
+            .then(res => res.json())
+            .then(data => {
+                statsData = data;
+                initCharts();
+                setupListeners();
+            });
+    });
+
+    function getSelectedCrops() {
+        const checkboxes = document.querySelectorAll(".crop-selector:checked");
+        return Array.from(checkboxes).map(cb => cb.value);
+    }
+
+    function initCharts() {
+        const crops = getSelectedCrops();
+        
+        // Chart 1: Nutrient Chart (Bar Chart)
+        const ctx1 = document.getElementById('nutrientChart').getContext('2d');
+        nutrientChart = new Chart(ctx1, {
+            type: 'bar',
+            data: getNutrientData(crops),
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#ccc' } }
+                },
+                scales: {
+                    x: { grid: { color: '#333' }, ticks: { color: '#ccc' } },
+                    y: { grid: { color: '#333' }, ticks: { color: '#ccc' } }
+                }
+            }
+        });
+
+        // Chart 2: Climate Chart (Radar/Polar or Bubble/Bar)
+        const ctx2 = document.getElementById('climateChart').getContext('2d');
+        climateChart = new Chart(ctx2, {
+            type: 'bar',
+            data: getClimateData(crops),
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#ccc' } }
+                },
+                scales: {
+                    x: { grid: { color: '#333' }, ticks: { color: '#ccc' } },
+                    y: { 
+                        grid: { color: '#333' }, 
+                        ticks: { color: '#ccc' },
+                        title: { display: true, text: 'Value', color: '#999' }
+                    }
+                }
+            }
+        });
+
+        // Chart 3: pH & Humidity (Radar / Line)
+        const ctx3 = document.getElementById('phHumidityChart').getContext('2d');
+        phHumidityChart = new Chart(ctx3, {
+            type: 'line',
+            data: getPhHumidityData(crops),
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#ccc' } }
+                },
+                scales: {
+                    x: { grid: { color: '#333' }, ticks: { color: '#ccc' } },
+                    y: { grid: { color: '#333' }, ticks: { color: '#ccc' } }
+                }
+            }
+        });
+    }
+
+    function updateCharts() {
+        const crops = getSelectedCrops();
+        
+        nutrientChart.data = getNutrientData(crops);
+        nutrientChart.update();
+
+        climateChart.data = getClimateData(crops);
+        climateChart.update();
+
+        phHumidityChart.data = getPhHumidityData(crops);
+        phHumidityChart.update();
+    }
+
+    function getNutrientData(crops) {
+        const labels = crops.map(c => c.charAt(0).toUpperCase() + c.slice(1));
+        const nData = crops.map(c => statsData[c]['N']['mean']);
+        const pData = crops.map(c => statsData[c]['P']['mean']);
+        const kData = crops.map(c => statsData[c]['K']['mean']);
+
+        return {
+            labels: labels,
+            datasets: [
+                { label: 'Nitrogen (N)', data: nData, backgroundColor: 'rgba(75, 192, 192, 0.7)', borderColor: 'rgba(75, 192, 192, 1)', borderWidth: 1 },
+                { label: 'Phosphorous (P)', data: pData, backgroundColor: 'rgba(255, 159, 64, 0.7)', borderColor: 'rgba(255, 159, 64, 1)', borderWidth: 1 },
+                { label: 'Potassium (K)', data: kData, backgroundColor: 'rgba(153, 102, 255, 0.7)', borderColor: 'rgba(153, 102, 255, 1)', borderWidth: 1 }
+            ]
+        };
+    }
+
+    function getClimateData(crops) {
+        const labels = crops.map(c => c.charAt(0).toUpperCase() + c.slice(1));
+        const tempData = crops.map(c => statsData[c]['temperature']['mean']);
+        const rainData = crops.map(c => statsData[c]['rainfall']['mean']);
+
+        return {
+            labels: labels,
+            datasets: [
+                { label: 'Temp Mean (°C)', data: tempData, backgroundColor: 'rgba(255, 99, 132, 0.7)', borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1 },
+                { label: 'Rainfall Mean (mm)', data: rainData, backgroundColor: 'rgba(54, 162, 235, 0.7)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 }
+            ]
+        };
+    }
+
+    function getPhHumidityData(crops) {
+        const labels = crops.map(c => c.charAt(0).toUpperCase() + c.slice(1));
+        const phData = crops.map(c => statsData[c]['ph']['mean']);
+        const humidityData = crops.map(c => statsData[c]['humidity']['mean']);
+
+        return {
+            labels: labels,
+            datasets: [
+                { label: 'pH Value (x10 for scale)', data: phData.map(v => v * 10), borderColor: '#ffcd56', backgroundColor: 'transparent', borderWidth: 2, tension: 0.1 },
+                { label: 'Humidity %', data: humidityData, borderColor: '#4bc0c0', backgroundColor: 'transparent', borderWidth: 2, tension: 0.1 }
+            ]
+        };
+    }
+
+    function setupListeners() {
+        document.querySelectorAll(".crop-selector").forEach(cb => {
+            cb.addEventListener("change", updateCharts);
+        });
+
+        document.getElementById("select-all-btn").addEventListener("click", () => {
+            document.querySelectorAll(".crop-selector").forEach(cb => cb.checked = true);
+            updateCharts();
+        });
+
+        document.getElementById("clear-all-btn").addEventListener("click", () => {
+            document.querySelectorAll(".crop-selector").forEach(cb => cb.checked = false);
+            updateCharts();
+        });
+    }
+</script>
+{% endblock %}

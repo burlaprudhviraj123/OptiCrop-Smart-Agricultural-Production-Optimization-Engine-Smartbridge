@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}OptiCrop - Optimize Agricultural Production{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center mb-5 text-center text-md-start">
+        <div class="col-md-7 hero-text">
+            <h1 class="display-4 fw-bold mb-3">Optimize Your Crop Yields with <span class="text-success-gradient">AI Insights</span></h1>
+            <p class="lead text-secondary mb-4">
+                OptiCrop is an intelligent agricultural optimization engine. Using machine learning and environmental statistics, we analyze soil parameters and climate variables to assist farmers and researchers in making data-driven decisions.
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
+                <a href="/recommend" class="btn btn-success btn-lg px-4 py-3 shadow">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Get Recommendation
+                </a>
+                <a href="/suitability" class="btn btn-outline-light btn-lg px-4 py-3">
+                    <i class="fa-solid fa-circle-check me-2"></i> Assess Crop Suitability
+                </a>
+            </div>
+        </div>
+        <div class="col-md-5 mt-5 mt-md-0 text-center">
+            <div class="hero-icon-container">
+                <i class="fa-solid fa-seedling text-success hero-animated-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scenarios Grid -->
+    <div class="row g-4 mt-4">
+        <!-- Scenario 1 Card -->
+        <div class="col-md-4">
+            <div class="card scenario-card h-100 border-0 p-4">
+                <div class="card-icon-wrapper bg-success-subtle text-success mb-4">
+                    <i class="fa-solid fa-wheat-awn fs-3"></i>
+                </div>
+                <h3 class="h4 card-title fw-bold mb-3">Smart Crop Recommendation</h3>
+                <p class="text-secondary card-text mb-4">
+                    Enter soil and climate conditions (N, P, K, pH, rainfall, temperature, and humidity) to find the most compatible crop using our trained ML models.
+                </p>
+                <a href="/recommend" class="mt-auto text-success fw-bold text-decoration-none d-flex align-items-center gap-1 hover-arrow">
+                    Start Recommendation <i class="fa-solid fa-arrow-right fs-6"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Scenario 2 Card -->
+        <div class="col-md-4">
+            <div class="card scenario-card h-100 border-0 p-4">
+                <div class="card-icon-wrapper bg-info-subtle text-info mb-4">
+                    <i class="fa-solid fa-sliders fs-3"></i>
+                </div>
+                <h3 class="h4 card-title fw-bold mb-3">Crop Suitability Assessment</h3>
+                <p class="text-secondary card-text mb-4">
+                    Select a target crop and supply soil values to check if they match the optimal ranges of the crop, with real-time feedback and suggestions.
+                </p>
+                <a href="/suitability" class="mt-auto text-info fw-bold text-decoration-none d-flex align-items-center gap-1 hover-arrow">
+                    Analyze Suitability <i class="fa-solid fa-arrow-right fs-6"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Scenario 3 Card -->
+        <div class="col-md-4">
+            <div class="card scenario-card h-100 border-0 p-4">
+                <div class="card-icon-wrapper bg-warning-subtle text-warning mb-4">
+                    <i class="fa-solid fa-chart-pie fs-3"></i>
+                </div>
+                <h3 class="h4 card-title fw-bold mb-3">Research & Policy Dashboard</h3>
+                <p class="text-secondary card-text mb-4">
+                    Explore visual relationships, compare nutrient profiles, temperature, pH, and precipitation needs across different crop classes.
+                </p>
+                <a href="/research" class="mt-auto text-warning fw-bold text-decoration-none d-flex align-items-center gap-1 hover-arrow">
+                    Open Dashboard <i class="fa-solid fa-arrow-right fs-6"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
