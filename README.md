@@ -50,9 +50,9 @@ OptiCrop is an AI-powered agricultural recommendation and suitability assessment
 * Modern web browser (Chrome, Edge, Safari, Firefox)
 
 ### Step 1: Open the Terminal
-Navigate to the active development directory:
+Navigate to the project development directory:
 ```bash
-cd "/Users/burlaprudhviraj/Downloads/Smartbridge/OptiCrop-Smart-Agricultural-Production-Optimization-Engine-Smartbridge/5. Project Development Phase"
+cd "5. Project Development Phase"
 ```
 
 ### Step 2: Activate the Virtual Environment
@@ -75,10 +75,3 @@ The server will boot on: **`http://127.0.0.1:5001`**
 * **Average Latency**: **9.33 milliseconds** (under 10 ms!).
 * **Maximum Latency**: **52 milliseconds**.
 * **Request Failures**: **0%** (0 failed requests out of 512+ runs).
-
----
-
-## 🔗 Project Links
-
-* **GitHub Repository**: [OptiCrop Repository](https://github.com/burlaprudhviraj123/OptiCrop-Smart-Agricultural-Production-Optimization-Engine-Smartbridge)
-* **Google Drive Video Demo**: [OptiCrop Video Demonstration](https://drive.google.com/file/d/1h9dzmD2WpUbYlc4oxG437qkKIBDaNR8i/view?usp=share_link)
